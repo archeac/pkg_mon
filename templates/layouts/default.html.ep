@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head><title><%= title %></title></head>
+    <body><%= content %></body>
+    <script>
+        var events = new EventSource('<%= url_for 'pkg_state' %>');
+
+        events.addEventListener('pkg_state', function(event) {
+            document.getElementById('update_time').innerHTML
+                = new Date().toString();
+
+            var notificationdiv = document.getElementById('notification');
+            var pkg_info = JSON.parse(event.data);
+            
+            if(pkg_info.installed) {
+                for (var pkg in pkg_info.installed) {
+                    var install_date = pkg_info.installed[pkg].install_date ? pkg_info.installed[pkg].install_date : 'N/A';
+                    notificationdiv.innerHTML += '<div class="notify_el">' + new Date().toTimeString() +
+                                                 ' installed ' + pkg + '</div>';
+                    var new_row = document.getElementById('pkg_table').insertRow(1);
+                    new_row.insertCell(0).innerHTML = pkg_info.installed[pkg].name;
+                    new_row.insertCell(1).innerHTML = pkg_info.installed[pkg].version;
+                    new_row.insertCell(2).innerHTML = pkg_info.installed[pkg].arch;
+                    new_row.insertCell(3).innerHTML = pkg_info.installed[pkg].desc;
+                    new_row.insertCell(4).innerHTML = install_date;
+                }
+            }
+            if(pkg_info.removed) {
+                for (var pkg in pkg_info.removed) {
+                notificationdiv.innerHTML += '<div class="notify_el">' + new Date().toTimeString() +
+                                             ' Removed ' + pkg + '</div>';
+
+                    var table_rows = document.getElementById('pkg_table').rows;
+                    for(var i = 0; i < table_rows.length; i++) {
+                        if(table_rows[i].cells[0].innerHTML == pkg) {
+                            document.getElementById('pkg_table').deleteRow(i);
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }, false);
+    </script>
+</html>
+

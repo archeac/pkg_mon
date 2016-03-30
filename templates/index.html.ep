@@ -1,0 +1,68 @@
+% layout 'default';
+% title 'Package Monitor';
+<h1 style="text-align:center">Package Monitor</h1>
+<div style="text-align:center">
+    <span style="font-weight:bold">Last Update:</span>
+    <span id="update_time"> Now</span>
+</div>
+
+<div id="pkg_list">
+    <table id = "pkg_table">
+        <tr>
+            <th>Package name</th>
+            <th>Version</th>
+            <th>Architecture</th>
+            <th>Description</th>
+            <th>Install Date</th>
+        </tr>
+        % for my $el (keys %$packages) {
+            <tr>
+                <td> <%= $packages->{$el}->{name} %> </td>
+                <td> <%= $packages->{$el}->{version} %></td>
+                <td> <%= $packages->{$el}->{arch} %> </td>
+                <td> <%= $packages->{$el}->{desc} %> </td>
+                <td> <%= $packages->{$el}->{install_date} || "N/A" %> </td>
+            </tr>
+        % }
+    </table>
+</div>
+
+<div id="notification">
+    <div class="notify_el" style="text-align:center;font-weight:bold;">Notifications</div>
+</div>
+
+<style>
+    body {
+        margin: auto;
+        color: #333333;
+        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    }
+    #pkg_list {
+        max-width: 70%;
+        float: left;
+        padding: 20px;
+    }
+    #notification {
+        border: 1px solid #ccc;
+        width: 23%;
+        float: right;
+        min-height: 100px;
+        margin-right: 20px;
+    }
+    .notify_el {
+        border-bottom: 1px solid #ccc;
+        padding: 10px;
+    }
+    th,
+    td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #E1E1E1; }
+    th:first-child,
+    td:first-child {
+        padding-left: 0; }
+    th:last-child,
+    td:last-child {
+      padding-right: 0;
+    }
+</style>
